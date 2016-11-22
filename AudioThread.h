@@ -25,6 +25,7 @@ typedef struct {
 } ad_wbuf_t;
 
 #include <ad.h>
+#include <err.h>
 
 #define SAMPLE_RATE  (16000)
 #define FRAMES_PER_BUFFER (32768)//(32768)
@@ -39,6 +40,19 @@ static int zc = 0;
 static int nzc = 0;
 static int silence, speech, sil_cutoff;
 static bool debug = false;
+struct ad_rec_s {
+	HWAVEIN h_wavein;	/* "HANDLE" to the audio input device */
+	ad_wbuf_t *wi_buf;	/* Recording buffers provided to system */
+	int32 n_buf;	/* #Recording buffers provided to system */
+	int32 opened;	/* Flag; A/D opened for recording */
+	int32 recording;
+	int32 curbuf;	/* Current buffer with data for application */
+	int32 curoff;	/* Start of data for application in curbuf */
+	int32 curlen;	/* #samples of data from curoff in curbuf */
+	int32 lastbuf;	/* Last buffer containing data after recording stopped */
+	int32 sps;		/* Samples/sec */
+	int32 bps;		/* Bytes/sample */
+};
 
 class AudioThread:
 	public wxThread
@@ -69,7 +83,7 @@ private:
 	Converter			cnv;
 	volatile bool		stop;
 	int					fileNum;
-//	SNDFILE				*sf;
+	SNDFILE				*sf;
 	FILE				*dump;
 	bool				isZeroSet;
 

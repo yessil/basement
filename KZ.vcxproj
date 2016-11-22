@@ -23,7 +23,7 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -87,7 +87,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>.\wave2feat;.;d:\wxWidgets-2.8.12\lib\vc_lib\mswud;d:\wxWidgets-2.8.12\include;..\..\sphinxbase\include\win32;..\..\sphinxbase\include\sphinxbase;..\..\sphinxbase\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\wave2feat;.;c:\wxWidgets-2.8.12\lib\vc_lib\mswud;c:\wxWidgets-2.8.12\include;..\..\sphinxbase\include\win32;..\..\sphinxbase\include\sphinxbase;..\..\sphinxbase\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;__WXMSW__;_WINDOWS;NOPCH;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -99,7 +99,7 @@
     <Link>
       <AdditionalDependencies>wxmsw28u_adv.lib;wxmsw28u_core.lib;wxbase28u_net.lib;wxbase28u.lib;wxmsw28u_richtext.lib;wxmsw28u_html.lib;wxbase28u_xml.lib;wxexpat.lib;wxregexu.lib;wxpng.lib;wxzlib.lib;winmm.lib;comctl32.lib;rpcrt4.lib;wsock32.lib;odbc32.lib;portaudio_x86.lib;sphinxbase.lib;psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>NotSet</ShowProgress>
-      <AdditionalLibraryDirectories>d:\wxWidgets-2.8.12\lib\vc_lib;..\..\portaudio\build\msvc\Win32\Release;..\..\sphinxbase\bin\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>c:\wxWidgets-2.8.12\lib\vc_lib;..\..\portaudio\build\msvc\Win32\Release;..\..\sphinxbase\bin\Release\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>LIBCMT.lib%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <SubSystem>Windows</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
