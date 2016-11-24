@@ -224,9 +224,11 @@ void DecoderThread::GetResult(){
 		return;
 	}
 	if (debug)
-		WriteText(_("Getting result\n"));
+		WriteText(_("\nGetting result"));
 	while (true){
 		sock->ReadMsg(buf, BUFLEN);
+		if (debug)
+			WriteText(_("\nReading..."));
 		len = sock->LastCount();
 		if (len > 0){
 			s.Empty();

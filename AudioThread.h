@@ -62,10 +62,9 @@ public:
 	AudioThread(BaseFrame *frm);
     virtual void *Entry();
 	virtual ~AudioThread(void);
-	wxString fileName;
+	//wxString fileName;
 	bool playIt;
 	bool recordIt;
-	bool isWriting;
 	int Initialize();
     int            err;
 	void Stop();
@@ -78,15 +77,12 @@ private:
     ad_rec_t			*in_ad;
     int                 timeout;
 	int16 frames[FRAMES_PER_BUFFER];
-	int16 wframes[FRAMES_PER_BUFFER];
 	BaseFrame*			frame;
 	Converter			cnv;
 	volatile bool		stop;
 	int					fileNum;
-	SNDFILE				*sf;
 	FILE				*dump;
-	bool				isZeroSet;
-
+	int OpenFile(char* filename);
 	void StartStream();
 	void StopStream();
 	void SaveToFile(uint32 num_frames, int16* frames);
