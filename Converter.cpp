@@ -53,7 +53,7 @@ extern "C" int convert(int32 argc, char **argv);
 
 	int Converter::Convert(wxString wfile){
 
-		char buf[20];
+		char buf[30];//TODO
 		strcpy(buf, (char*)wfile.char_str());
 		argv[36] = buf;
 		try {

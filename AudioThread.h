@@ -82,7 +82,7 @@ private:
 	volatile bool		stop;
 	int					fileNum;
 	FILE				*dump;
-	int OpenFile(char* filename);
+	bool OpenFile(char* filename);
 	void StartStream();
 	void StopStream();
 	void SaveToFile(uint32 num_frames, int16* frames);

@@ -262,28 +262,28 @@ void AudioThread::SaveFile(){
 		ad_stop_rec(in_ad);
 }
 
-int AudioThread::OpenFile(char* filename){
+bool AudioThread::OpenFile(char* filename){
 
 	sprintf(filename, "wav\\recorded%03d", fileNum);
 	if (dump != NULL) // is already opened
-		return  0;
+		return  true;
 	if ((dump = fopen(filename, "wb")) == 0) {
 		E_ERROR("Cannot open dump file %s\n", filename);
-		return -1;
+		return false;
 	}
-	return 0;
+	return true;
 }
 
 void AudioThread::Record(){
 
 	uint32 num_frames;
-	char fname[20];
-	char newname[20];
-	static int k = 0;
+	char fname[30];
+	char newname[30];
+	double cut;
 	static int m = 0;
-	int i;
+	static bool speechDetected = false;
 
-	if (OpenFile(fname))
+	if (!OpenFile(fname))
 		return;
 
 	if (!in_ad->recording)
@@ -291,6 +291,22 @@ void AudioThread::Record(){
 	
 	num_frames = ad_read(in_ad, frames, FRAMES_PER_BUFFER);
     if (num_frames > 0) {
+
+		zc = nzc = 1;
+		for (int i = 0; i<num_frames; i++){
+			if (abs(frames[i])< silence){
+				zc++;
+			}
+			else {
+				nzc++;
+			}
+		}
+
+		cut = double(zc * 1.0) / double((nzc *1.0));
+		if (cut > sil_cutoff && !speechDetected){
+			return;
+		}
+		speechDetected = true;
 
 		if (fwrite(frames, sizeof(int16), num_frames, dump) < num_frames) {
 			E_ERROR("Error writing audio to dump file.\n");
@@ -301,22 +317,11 @@ void AudioThread::Record(){
 			SetValue((abs(frames[0])+abs(frames[1])+abs(frames[2])) / 3); // level indicator on status panel
 			m =0;
 		}
-    /** dump the recorded audio to disk */
-		zc = nzc = 1;
-		for (i=0; i<num_frames; i++){
-			if (abs(frames[i])< silence){
-				zc++;
-			}
-			else {
-				nzc++;
-			}
-		}
-		double cut = double(zc * 1.0) / double((nzc *1.0));
 
 		if (debug)
 				frame->SetStatusbarText(wxString::Format(_T("cut: %5.3f"), cut));
 
-		if (cut < sil_cutoff *1e-4){
+		if (cut > sil_cutoff ){ //close  current dump file and open the new one
 			if (debug)
 				frame->SetStatusbarText(wxString::Format(_T("cut: %5f.3 !"), cut));
 
@@ -325,6 +330,7 @@ void AudioThread::Record(){
 			strcpy(newname, fname);
 			rename(fname, strcat(newname, ".raw"));
 			sprintf(fname, "wav\\recorded%03d", ++fileNum);
+			speechDetected = false;
 		}
     }
 	else {
