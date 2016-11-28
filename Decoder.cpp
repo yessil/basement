@@ -99,6 +99,9 @@ void DecoderThread::ProcessQueue(){
 	isReady = false;
 	bool sent = false;
 	wxString uttfile =_T("feat\\recorded.mfc");
+	char file[FILENAME_LENGHT];
+	char bakFile[FILENAME_LENGHT];
+	int renamed = -1;
 
 	if (stop){
 		int rr= SndMsg("0");
@@ -134,7 +137,13 @@ void DecoderThread::ProcessQueue(){
 		newts = stat_mtime(uttfile);
 		SndMsg((const char*)wxString::Format(_T("%ld"), newts).ToAscii());
 #endif
-		while(rename((char*)files[i].char_str(), (files[i] + _T(".bak")).char_str())!=0); 
+		do {
+			strcpy(bakFile,(char*)(files[i] + _T(".bak")).char_str());
+			strcpy(file, (char*)files[i].char_str());
+			remove(bakFile);
+			renamed = rename(file, bakFile);
+
+		} while(renamed!=0); 
 		try {
 			SetFlag(false);
 			ResetTimer();
@@ -151,6 +160,7 @@ void DecoderThread::ProcessQueue(){
 	}
 	//for (int i =0; i < files->Count(); i++)
 	isReady = true;
+	files.Clear();
 }
 
 void DecoderThread::Stop(){
@@ -293,9 +303,8 @@ bool DecoderThread::SendFile(wxString file){
 	while(fi.CanRead()){
 		fi.Read(buf, BUFLEN);
 		len = fi.LastRead();
-		if (len < 5 ){
-			return false;
-		}
+//		if (debug)
+//			WriteText(wxString::Format(_T("%d\n"), len));
 		if (SndMsg(buf, len) != len){
 			WriteText(_(" Ошибка передачи файла\n"));
 			return false;

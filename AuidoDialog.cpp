@@ -59,11 +59,16 @@ AudioDialog::AudioDialog(wxWindow* parent, wxWindowID id, const wxString& title,
 	debugChk = new wxCheckBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize );
 	gSizer1->Add( debugChk, 0, wxALL, 5 );
 
-	wxSizer *buttonSizer = CreateSeparatedButtonSizer(wxOK | wxCANCEL);
+	wxSizer *buttonSizer = CreateButtonSizer(wxOK);// | wxCANCEL);
     if ( buttonSizer )
     {
-		gSizer1->Add(buttonSizer, wxSizerFlags().Align(wxALIGN_CENTRE_HORIZONTAL));//DoubleBorder());
+		gSizer1->Add(buttonSizer, wxSizerFlags().Align(wxALIGN_RIGHT));//DoubleBorder());
     }
+	buttonSizer = CreateButtonSizer(wxCANCEL);
+	if (buttonSizer)
+	{
+		gSizer1->Add(buttonSizer, wxSizerFlags().Align(wxALIGN_LEFT));//DoubleBorder());
+	}
 
 	zeroMarginCtl->SetRange(0,10000);
 	zeroCutOff->SetRange(0, 50000);

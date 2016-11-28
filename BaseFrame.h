@@ -1,6 +1,7 @@
 #pragma once
 #include "wx/frame.h"
 #include "wx/log.h"
+#define FILENAME_LENGHT 30
 
 class BaseFrame :
 	public wxFrame

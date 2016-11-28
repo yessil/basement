@@ -277,8 +277,8 @@ bool AudioThread::OpenFile(char* filename){
 void AudioThread::Record(){
 
 	uint32 num_frames;
-	char fname[30];
-	char newname[30];
+	char fname[FILENAME_LENGHT];
+	char newname[FILENAME_LENGHT];
 	double cut;
 	static int m = 0;
 	static bool speechDetected = false;
