@@ -203,6 +203,8 @@ void AudioThread::Stop(){
 void AudioThread::ToggleRecord(){
 
 	recordIt = ! recordIt;
+	if (recordIt)
+		noiseLevelCounter = 0;
 }
 
 void AudioThread::Record2(){
@@ -280,7 +282,10 @@ void AudioThread::Record(){
 	char fname[FILENAME_LENGHT];
 	char newname[FILENAME_LENGHT];
 	double cut;
+	static double sumNoiseLevel = 0;
+	static double noiseLevel = 1000; // = 1/ noiseLevel actually
 	static int m = 0;
+
 	static bool speechDetected = false;
 
 	if (!OpenFile(fname))
@@ -303,7 +308,15 @@ void AudioThread::Record(){
 		}
 
 		cut = double(zc * 1.0) / double((nzc *1.0));
-		if (cut > sil_cutoff && !speechDetected){
+		if (noiseLevelCounter <= MAX_NOISE_LEVEL_COUNT){
+			sumNoiseLevel += cut;
+			if (noiseLevelCounter++ == MAX_NOISE_LEVEL_COUNT){
+				noiseLevel = sumNoiseLevel / MAX_NOISE_LEVEL_COUNT;
+			}
+			return;
+		}
+
+		if (cut > noiseLevel && !speechDetected){
 			return;
 		}
 		speechDetected = true;
@@ -319,9 +332,9 @@ void AudioThread::Record(){
 		}
 
 		if (debug)
-				frame->SetStatusbarText(wxString::Format(_T("cut: %5.3f"), cut));
+				frame->SetStatusbarText(wxString::Format(_T("cut: %5.3f noise: %5.3f"), cut, noiseLevel));
 
-		if (cut > sil_cutoff ){ //close  current dump file and open the new one
+		if (cut > noiseLevel ){ //close  current dump file and open the new one
 			if (debug)
 				frame->SetStatusbarText(wxString::Format(_T("cut: %5f.3 !"), cut));
 

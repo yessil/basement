@@ -237,9 +237,9 @@ void DecoderThread::GetResult(){
 		WriteText(_("\nGetting result"));
 	while (true){
 		sock->ReadMsg(buf, BUFLEN);
-		if (debug)
-			WriteText(_("\nReading..."));
 		len = sock->LastCount();
+		if (debug)
+			WriteText(wxString::Format(_T("Read: %5d bytes"), len));
 		if (len > 0){
 			s.Empty();
 			s.Append( frame->SERVER.Lower()== _("localhost") ?  (const wxChar*)buf : wxString::FromUTF8(buf));

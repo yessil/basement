@@ -35,7 +35,7 @@ typedef struct {
 #define	SPEECH_LENGTH_KEY _T("/Audio/SPEECH_LENGTH")
 #define	SERVER_KEY _T("/Setup/server")
 #define TIMEOUT 1000
-
+#define MAX_NOISE_LEVEL_COUNT 40
 static int zc = 0;
 static int nzc = 0;
 static int silence, speech, sil_cutoff;
@@ -93,6 +93,7 @@ private:
 	void Record2();
 	void SaveFile();
 	void SetValue(int value);
+	int noiseLevelCounter = 0;// counter for computing noise level in first seconds of recording
 
 };
 #endif// AUDIOTHREAD_H
