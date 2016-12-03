@@ -244,6 +244,7 @@ void DecoderThread::GetResult(){
 			s.Empty();
 			s.Append( frame->SERVER.Lower()== _("localhost") ?  (const wxChar*)buf : wxString::FromUTF8(buf));
 			s.Replace(_T("<UNK>"), _T(" "), true);
+			s.Replace(_T(" Â "), _T(""), true); // TODO
 			eventNewText.SetString(s);
 			wxPostEvent(frame, eventNewText);
 		} else {

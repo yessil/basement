@@ -307,16 +307,19 @@ void AudioThread::Record(){
 			}
 		}
 
-		cut = double(zc * 1.0) / double((nzc *1.0));
-		if (noiseLevelCounter <= MAX_NOISE_LEVEL_COUNT){
-			sumNoiseLevel += cut;
-			if (noiseLevelCounter++ == MAX_NOISE_LEVEL_COUNT){
-				noiseLevel = sumNoiseLevel / MAX_NOISE_LEVEL_COUNT;
-			}
-			return;
-		}
+		cut = double(nzc * 1.0) / double((zc *1.0));
+		//if (noiseLevelCounter <= MAX_NOISE_LEVEL_COUNT){
+		//	sumNoiseLevel += cut;
+		//	if (noiseLevelCounter++ == MAX_NOISE_LEVEL_COUNT){
+		//		noiseLevel = sumNoiseLevel / MAX_NOISE_LEVEL_COUNT;
+		//	}
+		//	return;
+		//}
+		noiseLevel = sil_cutoff  *1e-3;
+		if (debug)
+			frame->SetStatusbarText(wxString::Format(_T("cut: %5.3f noise: %5.3f"), cut, noiseLevel));
 
-		if (cut > noiseLevel && !speechDetected){
+		if (cut < noiseLevel && !speechDetected){
 			return;
 		}
 		speechDetected = true;
@@ -334,7 +337,7 @@ void AudioThread::Record(){
 		if (debug)
 				frame->SetStatusbarText(wxString::Format(_T("cut: %5.3f noise: %5.3f"), cut, noiseLevel));
 
-		if (cut > noiseLevel ){ //close  current dump file and open the new one
+		if (cut < noiseLevel *.5){ //close  current dump file and open the new one
 			if (debug)
 				frame->SetStatusbarText(wxString::Format(_T("cut: %5f.3 !"), cut));
 
